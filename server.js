@@ -1,12 +1,20 @@
+const express = require('express');
 const { PeerServer } = require('peer');
+const cors = require('cors');
 
+const app = express();
 const port = process.env.PORT || 9000;
-const path = process.env.PEERJS_PATH || '/myapp';
+const path = process.env.PEERJS_PATH || '/';
 
-const server = PeerServer({
-  port,
+app.use(cors()); // Enable CORS for all routes
+
+const peerServer = PeerServer({
   path,
-  proxied: true // important for Render and other proxies
+  proxied: true
 });
 
-console.log(`PeerServer running on port ${port} at path ${path}`);
+app.use(peerServer);
+
+app.listen(port, () => {
+  console.log(`PeerServer running on port ${port} at path ${path}`);
+});
